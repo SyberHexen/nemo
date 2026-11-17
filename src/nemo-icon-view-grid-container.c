@@ -902,7 +902,13 @@ nemo_icon_view_grid_container_update_icon (NemoIconContainer *container,
     old_width = old_size.x1 - old_size.x0;
     new_width = new_size.x1 - new_size.x0;
 
-    if (old_width != 0 && old_width != new_width) {
+    /* Keep the icon centred where it was when its width changes -- but only
+     * an icon that has been placed: one still waiting in new_icons is at 0,0
+     * until finish_adding_new_icons () places it, and moving it would save
+     * that spot (0..half its width, 0) as its position, piling the desktop's
+     * icons up in the top left corner at the next start */
+    if (old_width != 0 && old_width != new_width &&
+        g_list_find (details->new_icons, icon) == NULL) {
         gint diff;
         diff = (new_width - old_width) / 2;
         nemo_icon_container_move_icon (container, icon, (int)icon->x - diff, (int)icon->y, 1.0, FALSE, TRUE, TRUE);
