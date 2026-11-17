@@ -3910,6 +3910,15 @@ nemo_file_get_desktop_grid_adjusts (NemoFile   *file,
     char c;
     gint result;
 
+    /* The default adjusts (100%) when there are none (yet): callers use what
+     * this returns as the grid size, and a desktop laid out on a grid of
+     * whatever was in their variables piles its icons up in a corner and
+     * saves them there */
+    if (int_a)
+        *int_a = 100;
+    if (int_b)
+        *int_b = 100;
+
     g_return_if_fail (key != NULL);
     g_return_if_fail (key[0] != '\0');
 
@@ -3924,11 +3933,6 @@ nemo_file_get_desktop_grid_adjusts (NemoFile   *file,
         gchar **meta_strv = NEMO_FILE_GET_CLASS (file)->get_metadata_as_list (file, key);
 
         if (!meta_strv) {
-            if (int_a)
-                *int_a = 100;
-            if (int_b)
-                *int_b = 100;
-
             return;
         }
 

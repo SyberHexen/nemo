@@ -850,7 +850,7 @@ nemo_icon_view_get_directory_grid_adjusts (NemoIconView *icon_view,
                                            gint         *horizontal,
                                            gint         *vertical)
 {
-    gint h, v;
+    gint h = 100, v = 100;
 
     sync_directory_monitor_number (icon_view, file);
 
