@@ -906,12 +906,18 @@ nemo_icon_view_grid_container_update_icon (NemoIconContainer *container,
      * an icon that has been placed: one still waiting in new_icons is at 0,0
      * until finish_adding_new_icons () places it, and moving it would save
      * that spot (0..half its width, 0) as its position, piling the desktop's
-     * icons up in the top left corner at the next start */
+     * icons up in the top left corner at the next start.
+     *
+     * Don't save the re-centred position: an icon's image often changes
+     * width at every start (a generic icon until its own icon or thumbnail
+     * is loaded), so the saved position would move by half the difference
+     * at every login and the icon creep across the desktop. Its saved
+     * position stays the one it was placed at. */
     if (old_width != 0 && old_width != new_width &&
         g_list_find (details->new_icons, icon) == NULL) {
         gint diff;
         diff = (new_width - old_width) / 2;
-        nemo_icon_container_move_icon (container, icon, (int)icon->x - diff, (int)icon->y, 1.0, FALSE, TRUE, TRUE);
+        nemo_icon_container_move_icon (container, icon, (int)icon->x - diff, (int)icon->y, 1.0, FALSE, TRUE, FALSE);
         nemo_icon_canvas_item_invalidate_label_size (icon->item);
         gtk_widget_queue_draw (GTK_WIDGET(container));
     }
